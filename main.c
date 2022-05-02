@@ -5,6 +5,7 @@
 
 int main(int argc, char *argv[])
 {
+  printf("entered main");
   if(argv[1] == NULL){                 //make sure a file name was provided
     printf("Error: No file name provided\n");
   }
