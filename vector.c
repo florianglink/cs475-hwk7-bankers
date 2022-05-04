@@ -38,6 +38,7 @@ void freeup()
     free(demand);
     free(alloc);
     free(available);
+    free(need);
 }
 
 /**
