@@ -4,21 +4,19 @@
 #include "banker.h"
 #include <stdbool.h>
 
-// TODO - Safety Algorithm goes here
-
 bool isSafe(int *available, int **alloc)
 {
     int *work = cloneVector(available);
-    int finish[numProc];
-    int complete[numProc];
-    int count = 0;
-  
+    int finish[numProc];    //keeps track of which thread(s) have finished
+    int complete[numProc];  //holds index of each thread that has been completed
+    int count = 0;          //counter to make sure a finished thread id gets added to the correct slot
     for(int i=0; i<numProc; i++) {finish[i] = 0;}
+
     while(unfinished(finish, work) != -1){
         int index = unfinished(finish, work);
         addVectors(alloc[index], work);
         finish[index] = 1;
-        complete[count] = index;
+        complete[count] = index;  
         count++;
         calcNeed();
     }
