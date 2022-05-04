@@ -5,7 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-  printf("entered main");
   if(argv[1] == NULL){                 //make sure a file name was provided
     printf("Error: No file name provided\n");
   }
@@ -16,7 +15,6 @@ int main(int argc, char *argv[])
       printf("Error: File doesn't exist\n");
     }
     else {
-      printf("entered else");
       fscanf(file, "%d", &numRes);  //grab number of resources
       fscanf(file, "%d", &numProc); //grab number of processes
       init(numRes, numProc);        //initialize all vectors/matrices
@@ -33,14 +31,15 @@ int main(int argc, char *argv[])
           fscanf(file, "%d", &alloc[l][m]);      //scan values into the allocation matrix
         }
       }
-      //printMatrix(alloc);
-      //printVector(resourceVector);
-      //int **work = clone(alloc);
-      //printMatrix(work);
+
+      calcAvailable();
+      if(!(integrityTest() == -1)){       //conduct sanity check
+        isSafe(available, alloc, demand); //run safety algorithm
+      }
+      freeup();
     }
   }
 
-
-  // TODO: Run banker's safety algorithm
   return 0;
 }
+
