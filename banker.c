@@ -48,6 +48,7 @@ bool isSafe(int *available, int **alloc)
  * Helper method to determine if there is an unfinished thread. If there is, it returns the index
  * of the first unfinished thread it finds. Returns -1 if all threads have finished.
  * @param finish the array to keep track of the state of all threads
+ * @param work the vector of currently available resources
  */
 int unfinished(int finish[], int *work)
 {
