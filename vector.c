@@ -3,8 +3,6 @@
 #include "vector.h"
 #include <string.h>
 
-// TODO - Define vector and matrix operations
-
 /**
  * Helper function to initialize the necessary vectors/matrices
  * @param numRes the number of resources
@@ -23,6 +21,11 @@ void init(int numRes, int numProc)
     alloc = (int**)malloc(sizeof(int*)*numProc);
     for(int i=0; i<numProc; i++) {
         alloc[i] = (int*)malloc(sizeof(int)*numRes);
+    }
+
+    need = (int**)malloc(sizeof(int*)*numProc);
+    for(int i=0; i<numProc; i++) {
+        need[i] = (int*)malloc(sizeof(int*)*numRes);
     }
 }
 
@@ -148,10 +151,16 @@ void calcAvailable()
     for(int i=0; i<numProc; i++){
         subractVectors(alloc[i], available);
     }
-    for(int i=0; i<numRes; i++){
-        if(available[i]<0){
+}
 
-        }
+/**
+ * Calculates the need matrix
+ */
+void calcNeed()
+{
+    need = cloneMatrix(demand);
+    for(int i=0; i<numProc; i++){
+        subractVectors(alloc[i], need[i]);
     }
 }
 
@@ -162,8 +171,6 @@ void calcAvailable()
 int integrityTest()
 {
     int *resources = cloneVector(resourceVector);
-    printVector(resources);
-    printMatrix(alloc);
     for(int i=0; i<numRes; i++) {
         for(int j=0; j<numProc; j++) {
             resources[i] -= alloc[i][j];

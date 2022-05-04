@@ -6,32 +6,42 @@
 
 // TODO - Safety Algorithm goes here
 
-bool isSafe(int *available, int **alloc, int **demand)
+bool isSafe(int *available, int **alloc)
 {
     int *work = cloneVector(available);
     int finish[numProc];
-    int check;
-    int vecCmp;
     int complete[numProc];
     int count = 0;
+  
     for(int i=0; i<numProc; i++) {finish[i] = 0;}
-    do {
-        check = unfinished(finish);
-        vecCmp = compareVectors(demand[check], work);
-        if(!(check == -1) && vecCmp == 0){
-            addVectors(alloc[check], work);
-            finish[check] = 1;
-            complete[count] = check;
-            count++;
+    while(unfinished(finish, work) != -1){
+        int index = unfinished(finish, work);
+        addVectors(alloc[index], work);
+        finish[index] = 1;
+        complete[count] = index;
+        count++;
+        calcNeed();
+    }
+
+    if(allFinished(finish)){
+        printf("SAFE: ");
+        for(int i=0; i<numProc; i++){
+            printf("T%d ", complete[i]);
         }
-    } while(!(check == -1) && vecCmp == 0);
-    if(unfinished(finish) == -1){
-        printf("SAFE\n");
+        printf("\n");
         return true;
         
     }
-    printf("UNSAFE\n");
-    return false;
+    else {
+        printf("UNSAFE: ");
+        for(int i=0; i<numProc; i++){
+            if(finish[i]==0){
+                printf("T%d ", i);
+            }
+        }
+        printf("can't finish\n");
+        return false;
+    }
     
 
 }
@@ -41,12 +51,27 @@ bool isSafe(int *available, int **alloc, int **demand)
  * of the first unfinished thread it finds. Returns -1 if all threads have finished.
  * @param finish the array to keep track of the state of all threads
  */
-int unfinished(int finish[])
+int unfinished(int finish[], int *work)
 {
     for(int i=0; i<numProc; i++){
-        if(finish[i] == 0){
+        if((finish[i] == 0) && (compareVectors(need[i], work))==0){
             return i;
         }
     }
     return -1;
+}
+
+/**
+ * Scans the finish array to see if any thread was unable to finish.
+ * Used after making it through the main while loop in isSafe();
+ * @param finish the array to check
+ */
+bool allFinished(int *finish)
+{
+    for(int i=0; i<numProc; i++){
+        if(finish[i]==0){
+            return false;
+        }
+    }
+    return true;
 }

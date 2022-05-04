@@ -33,8 +33,9 @@ int main(int argc, char *argv[])
       }
 
       calcAvailable();
-      if(!(integrityTest() == -1)){       //conduct sanity check
-        isSafe(available, alloc, demand); //run safety algorithm
+      calcNeed();
+      if(!(integrityTest() == -1)){   //conduct sanity check
+        isSafe(available, alloc);     //run safety algorithm
       }
       freeup();
     }

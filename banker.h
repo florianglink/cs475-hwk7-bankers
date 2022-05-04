@@ -1,4 +1,5 @@
 #include <stdbool.h>
 
-bool isSafe(int *available, int **alloc, int **demand);
-int unfinished(int finish[]);
+bool isSafe(int *available, int **alloc);
+int unfinished(int finish[], int *work);
+bool allFinished(int *finish);
